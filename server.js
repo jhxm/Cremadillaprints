@@ -61,6 +61,11 @@ app.post('/api/checkout/create', async (req, res) => {
       1: 48, 2: 72, 3: 38, 4: 55, 5: 30, // 5 is sale price
       6: 85, 7: 32, 8: 65, 9: 95,
     };
+    const PRODUCT_NAMES = {
+  1: 'Midnight Fern', 2: 'Burnt Horizon', 3: 'Sic Transit',
+  4: 'Low Tide', 5: 'Dried Pampas', 6: 'Tessellate No.3',
+  7: 'Persevere', 8: 'Desert Strata', 9: 'Noise Study I',
+};
     for (const item of items) {
       if (!VALID_PRICES[item.id]) return res.status(400).json({ error: `Unknown product id ${item.id}` });
       if (item.qty < 1 || item.qty > 20) return res.status(400).json({ error: 'Invalid quantity' });
@@ -96,7 +101,7 @@ app.post('/api/checkout/create', async (req, res) => {
     const paypalOrder = await createPayPalOrder({
       orderNum,
       totalCents,
-      items: items.map(i => ({ ...i, price: VALID_PRICES[i.id] })),
+      items: items.map(i => ({ ...i, price: VALID_PRICES[i.id], title: PRODUCT_NAMES[i.id] })),
     });
 
     await setPaypalOrderId(orderNum, paypalOrder.id);
