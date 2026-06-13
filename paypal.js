@@ -34,14 +34,14 @@ async function createPayPalOrder({ orderNum, totalCents, items }) {
   const token = await getAccessToken();
 
   const itemsPayload = items.map(i => ({
-    name: i.title,
-    quantity: String(i.qty),
-    unit_amount: {
-      currency_code: 'USD',
-      value: ((i.salePrice || i.price)).toFixed(2),
-    },
-    category: 'PHYSICAL_GOODS',
-  }));
+  name: i.title || i.name || `Print #${i.id}`,
+  quantity: String(i.qty),
+  unit_amount: {
+    currency_code: 'USD',
+    value: (i.salePrice || i.price).toFixed(2),
+  },
+  category: 'PHYSICAL_GOODS',
+}));
 
   const totalDollars = (totalCents / 100).toFixed(2);
 
